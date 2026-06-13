@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import App from '../App.vue'; 
+import SignupView from '../views/common/Signup/SignupView.vue';
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: App
+    name: 'signup',
+    component: SignupView
   }
   // Future roles routes (e.g., /renter, /customer) 
 ];
