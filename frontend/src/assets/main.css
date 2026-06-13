@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+@theme {
+  /* This sets up the custom Sri Lankan corporate blue branding palette natively in v4 */
+  --color-brand-light: #3b82f6;
+  --color-brand: #1e3a8a;
+  --color-brand-dark: #172554;
+}

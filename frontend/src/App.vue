@@ -1,11 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 
-// Basic reactive state to test that Vue setup works
 const systemName = ref('CeylonWheels')
 const testBackendStatus = ref('Click below to check API')
 
-// Simple test method to make sure it can talk to your NestJS server later
 async function checkApiConnection() {
   try {
     const response = await fetch('http://localhost:3000/api/v1')
@@ -21,63 +19,34 @@ async function checkApiConnection() {
 </script>
 
 <template>
-  <div class="app-container">
-    <header>
-      <h1>🚗 {{ systemName }} Development Dashboard</h1>
-      <p>AI-Powered Vehicle Rental & Fleet Management System</p>
+  <div class="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-6">
+    
+    <header class="text-center mb-8">
+      <h1 class="text-4xl font-extrabold text-brand tracking-tight mb-2">
+        🚗 {{ systemName }} Dashboard
+      </h1>
+      <p class="text-slate-600 text-lg">
+        AI-Powered Vehicle Rental & Fleet Management System
+      </p>
     </header>
 
-    <main>
-      <div class="card">
-        <h3>Backend Integration Check</h3>
-        <p class="status-text">{{ testBackendStatus }}</p>
-        <button @click="checkApiConnection">Test Connection to Backend</button>
+    <main class="w-full max-w-md">
+      <div class="bg-white rounded-2xl p-6 shadow-xl border border-slate-200 text-center">
+        <h3 class="text-xl font-bold text-slate-800 mb-1">Backend Integration</h3>
+        <p class="text-xs text-slate-400 uppercase tracking-widest font-bold mb-4">Status Check</p>
+        
+        <div class="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-200">
+          <p class="text-slate-700 font-semibold text-base">{{ testBackendStatus }}</p>
+        </div>
+
+        <button 
+          @click="checkApiConnection"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition duration-200 shadow-lg shadow-blue-200 cursor-pointer"
+        >
+          Test Connection to Backend
+        </button>
       </div>
     </main>
+
   </div>
 </template>
-
-<style scoped>
-/* Temporary basic styling to make it look presentable */
-.app-container {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 20px;
-  text-align: center;
-  color: #333;
-}
-
-header h1 {
-  color: #1e3a8a; /* Clean blue startup vibe */
-}
-
-.card {
-  background: #f3f4f6;
-  border-radius: 12px;
-  padding: 30px;
-  margin-top: 30px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-
-.status-text {
-  font-weight: bold;
-  font-size: 1.1rem;
-  margin: 15px 0;
-}
-
-button {
-  background-color: #2563eb;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-button:hover {
-  background-color: #1d4ed8;
-}
-</style>
