@@ -2,6 +2,7 @@ import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule, InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { Connection } from 'mongoose';
       }),
     }),
   ],
+  controllers: [AppController],
 })
 export class AppModule implements OnModuleInit {
   // Inject the Mongoose connection instance into the module constructor
