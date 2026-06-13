@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  /* This sets up the custom Sri Lankan corporate blue branding palette natively in v4 */
-  --color-brand-light: #3b82f6;
-  --color-brand: #1e3a8a;
-  --color-brand-dark: #172554;
+  /* Exact color configuration matched directly from your design image */
+  --color-brand-maroon: #580000;       /* The dominant deep dark crimson */
+  --color-brand-light: #fbe5e3;        /* The ultra-soft pastel rose/cream background tint */
+  --color-brand-text: #4a0000;         /* The darker crimson text header style */
+  --color-brand-bg: #fdfaf9;           /* The soft warm overall page background white */
 }
