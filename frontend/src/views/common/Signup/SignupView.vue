@@ -12,6 +12,12 @@ const district = ref<string>('');
 const contactNumber = ref<string>('');
 const password = ref<string>('');
 const showPassword = ref<boolean>(false);
+
+// Status Messages & Loading states
+const isLoading = ref<boolean>(false);
+const statusMessage = ref<string | null>(null);
+const statusType = ref<'success' | 'error' | null>(null);
+
 const sriLankanDistricts = [
   'Colombo', 'Gampaha', 'Kalutara', 'Kandy', 'Matale', 'Nuwara Eliya', 
   'Galle', 'Matara', 'Hambantota', 'Jaffna', 'Kilinochchi', 'Mannar', 
@@ -27,19 +33,62 @@ watch(accountRole, (newRole) => {
   }
 });
 
-const handleSignupSubmit = () => {
+// Connected API Form Submission handler
+const handleSignupSubmit = async () => {
+  isLoading.value = true;
+  statusMessage.value = null;
+  statusType.value = null;
+
   const payload = {
     role: accountRole.value,
-    // If renter and company toggle is true, backend treats this profile as a corporate entity
     isCorporateEntity: isCompany.value, 
-    fullName: fullName.value, // Holds individual name or Company name dynamically
+    fullName: fullName.value, 
     email: email.value,
     location: { town: town.value, district: district.value },
     phone: contactNumber.value,
     password: password.value
   };
   
-  console.log('Submitting Configured Payload to NestJS Layer:', payload);
+  try {
+    const response = await fetch('http://localhost:3000/api/v1/auth/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      // Catch NestJS ValidationPipe errors or manual ConflictExceptions
+      throw new Error(data.message || 'An error occurred during registration.');
+    }
+
+    // Success flow execution
+    statusType.value = 'success';
+    statusMessage.value = data.message || 'Registration completed successfully!';
+    
+    // Save new JWT token to local storage securely
+    if (data.accessToken) {
+      localStorage.setItem('ceylonwheels_token', data.accessToken);
+    }
+
+    // Reset fields after successful entry
+    fullName.value = '';
+    email.value = '';
+    town.value = '';
+    district.value = '';
+    contactNumber.value = '';
+    password.value = '';
+
+  } catch (error: any) {
+    statusType.value = 'error';
+    // Format array messages from ValidationPipe into readable text strings
+    statusMessage.value = Array.isArray(error.message) ? error.message[0] : error.message;
+  } finally {
+    isLoading.value = false;
+  }
 };
 </script>
 
@@ -58,7 +107,7 @@ const handleSignupSubmit = () => {
         <div class="relative z-20 text-center md:text-left mb-60">
           <h1 class="text-4xl font-bold tracking-tight mb-3">CeylonWheels</h1>
           <p class="text-slate-200 text-sm leading-relaxed font-medium max-w-sm mb-10">
-            Experience the zenith of automotive luxury. Sign up to access our curated fleet of premium vehicles.
+            Experience the zenith of automotive luxury. Sign up to access our curated collection of premium vehicles.
           </p>
           <div class="relative z-20 flex items-center space-x-6 text-xs font-bold tracking-wider uppercase text-slate-300">
           <div class="flex items-center space-x-2">
@@ -115,6 +164,16 @@ const handleSignupSubmit = () => {
             ></span>
           </button>
           <span class="text-xs font-semibold text-slate-600 tracking-wide">Register as a Company</span>
+        </div>
+
+        <div 
+          v-if="statusMessage" 
+          :class="statusType === 'success' ? 'bg-emerald-50 border-emerald-500 text-emerald-800' : 'bg-rose-50 border-rose-500 text-rose-800'"
+          class="mb-5 p-3.5 border-l-4 rounded-r-xl text-xs font-semibold flex items-start space-x-2.5 shadow-sm animate-fadeIn"
+        >
+          <svg v-if="statusType === 'success'" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <svg v-else class="w-4 h-4 text-rose-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>{{ statusMessage }}</span>
         </div>
 
         <form @submit.prevent="handleSignupSubmit" class="space-y-4">
@@ -224,10 +283,12 @@ const handleSignupSubmit = () => {
 
           <button 
             type="submit" 
-            class="w-full bg-brand-maroon hover:opacity-95 text-white font-bold py-3 px-4 rounded-xl transition flex items-center justify-center space-x-2 shadow-lg shadow-brand-maroon/10 mt-6 cursor-pointer"
+            :disabled="isLoading"
+            class="w-full bg-brand-maroon hover:opacity-95 disabled:opacity-50 text-white font-bold py-3 px-4 rounded-xl transition flex items-center justify-center space-x-2 shadow-lg shadow-brand-maroon/10 mt-6 cursor-pointer"
           >
-            <span>Create Account</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            <svg v-if="isLoading" class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            <span v-else>Create Account</span>
+            <svg v-if="!isLoading" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
           </button>
         </form>
 
