@@ -1,9 +1,10 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import { SignupDto } from './dto/signup.dto';
-import { JwtService } from '@nestjs/jwt'; //
+import { LoginDto } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -53,5 +54,36 @@ export class AuthService {
     } catch (error) {
       throw new InternalServerErrorException('Database failure processing registration records.');
     }
+  }
+
+  // login
+  async login(loginDto: LoginDto): Promise<{ success: boolean; message: string; accessToken: string }> {
+    const { email, password } = loginDto;
+
+    // Look up user by lowercase unique email index
+    const user = await this.userModel.findOne({ email: email.toLowerCase() });
+    if (!user) {
+      // Throw generic 401 message for security obscurity (stops email harvesting)
+      throw new UnauthorizedException('Invalid email credentials or password.');
+    }
+
+    // Compare the plain password string with the database-encrypted hash
+    const isPasswordMatching = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatching) {
+      throw new UnauthorizedException('Invalid email credentials or password.');
+    }
+
+    // Generate signed token signature structure containing safe metadata context
+    const jwtPayload = { 
+      sub: user._id, 
+      email: user.email, 
+      role: user.role 
+    };
+
+    return {
+      success: true,
+      message: 'Authentication validated successfully.',
+      accessToken: this.jwtService.sign(jwtPayload),
+    };
   }
 }
