@@ -58,7 +58,7 @@ const selectVehicle = (vehicleId: string) => {
 <template>
   <header class="bg-white border-b border-slate-100 h-16 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-50 shadow-sm">
     
-    <div class="flex items-center space-x-3 cursor-pointer shrink-0" @click="router.push('/dashboard')">
+    <div class="flex items-center space-x-3 cursor-pointer shrink-0" @click="router.push('/cusdashboard')">
       <div class="w-9 h-9 rounded-lg overflow-hidden flex items-center justify-center ">
         <img 
           src="/ceylonwheels-logo.png" 
@@ -70,8 +70,8 @@ const selectVehicle = (vehicleId: string) => {
     </div>
     
     <nav class="hidden lg:flex items-center space-x-10 text-xs font-bold uppercase tracking-wider text-slate-500 ml-28 mr-auto">
-      <router-link to="/dashboard" :class="isActive('/dashboard') ? 'text-[#4A0004]' : 'hover:text-[#4A0004] transition'">Home</router-link>
-      <a href="#" class="hover:text-[#4A0004] transition">Vehicles</a>
+      <router-link to="/cusdashboard" :class="isActive('/cusdashboard') ? 'text-[#4A0004]' : 'hover:text-[#4A0004] transition'">Home</router-link>
+      <router-link to="/categories" class="hover:text-[#4A0004] transition">Vehicles</router-link>
       <a href="#" class="hover:text-[#4A0004] transition">Deals/Offers</a>
       <a href="#" class="hover:text-[#4A0004] transition">About Us</a>
       <a href="#" class="hover:text-[#4A0004] transition">Contact</a>
