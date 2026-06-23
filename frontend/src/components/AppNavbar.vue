@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter();
@@ -8,11 +8,53 @@ const route = useRoute();
 // Navbar layout active link tracking utility
 const isActive = (path: string) => route.path === path;
 
+// User Profile & Location State
+const userTown = ref<string>('Loading...');
+
 // Live Reactive Search State
 const searchQuery = ref<string>('');
 const isDropdownOpen = ref<boolean>(false);
 const searchResults = ref<any[]>([]);
 const isLoading = ref<boolean>(false);
+
+// Fetch user profile details on mount to parse signup location
+const fetchUserProfile = async () => {
+  try {
+    // Retrieve stored JWT auth token
+    const token = localStorage.getItem('ceylonwheels_token') || localStorage.getItem('token');
+
+    // If there's no token, show Guest immediately
+    if (!token) {
+      userTown.value = 'Guest';
+      return;
+    }
+
+    const response = await fetch('http://localhost:3000/api/v1/auth/profile', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      const userData = await response.json();
+      // Accessing the 'town' field from the nested 'location' object in MongoDB
+      if (userData?.location?.town) {
+        userTown.value = userData.location.town;
+      } else {
+        userTown.value = 'Set Location'; // Fallback if town field isn't populated
+      }
+    } else {
+      userTown.value = 'Guest';
+    }
+  } catch (error) {
+    console.error("Failed to fetch authenticated user location profile:", error);
+    userTown.value = 'Sri Lanka'; // Universal rescue fallback string
+  }
+};
+
+onMounted(() => {
+  fetchUserProfile();
+});
 
 // Watches input to instantly trigger backend data query streams as the user types
 watch(searchQuery, async (newQuery) => {
@@ -41,7 +83,6 @@ watch(searchQuery, async (newQuery) => {
 
 // Closes autocomplete panel when input focus is dropped safely
 const handleBlur = () => {
-  // Timeout prevents instantaneous closing from blocking product item click interactions
   setTimeout(() => {
     isDropdownOpen.value = false;
   }, 200);
@@ -128,12 +169,14 @@ const selectVehicle = (vehicleId: string) => {
     </div>
 
     <div class="flex items-center space-x-3.5 shrink-0">
+      <!-- Dynamic Real-Time User Location Button Component -->
       <button class="text-slate-500 hover:text-[#4A0004] flex items-center space-x-1 text-xs font-bold transition px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer">
         <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
         </svg>
-        <span class="hidden sm:inline">Colombo</span>
+        <!-- Binds to userTown variable parsing DB location object -->
+        <span class="hidden sm:inline capitalize">{{ userTown }}</span>
       </button>
 
       <button class="text-slate-400 hover:text-slate-600 relative p-2 rounded-full hover:bg-slate-50 transition cursor-pointer">
