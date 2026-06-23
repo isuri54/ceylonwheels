@@ -73,14 +73,6 @@ const allCategories = ref([
   }
 ]);
 
-// Click Event routing logic
-const viewCategoryModels = (categoryName: string) => {
-  router.push({
-    name: 'category-models',
-    params: { category: categoryName }
-  });
-};
-
 </script>
 
 <template>
@@ -104,7 +96,6 @@ const viewCategoryModels = (categoryName: string) => {
         <div 
           v-for="cat in allCategories" 
           :key="cat.name"
-          @click="viewCategoryModels(cat.name)"
           class="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition duration-200 group cursor-pointer flex flex-col justify-between"
         >
           <div>
