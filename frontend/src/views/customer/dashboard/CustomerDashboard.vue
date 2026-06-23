@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AppNavbar from '../../../components/AppNavbar.vue';
+import AppFooter from '../../../components/AppFooter.vue';
 
 const router = useRouter();
 
@@ -249,6 +250,7 @@ const faqs = ref([
       </div>
 
     </main>
+    <AppFooter />
   </div>
 </template>
 
