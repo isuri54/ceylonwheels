@@ -17,13 +17,26 @@ const isDropdownOpen = ref<boolean>(false);
 const searchResults = ref<any[]>([]);
 const isLoading = ref<boolean>(false);
 
+// Utility function to scroll smoothly to a specific footer section ID
+const scrollToFooterSection = (elementId: string) => {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } else {
+    // If the user isn't on the dashboard home layout, take them there first
+    router.push('/cusdashboard').then(() => {
+      setTimeout(() => {
+        document.getElementById(elementId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    });
+  }
+};
+
 // Fetch user profile details on mount to parse signup location
 const fetchUserProfile = async () => {
   try {
-    // Retrieve stored JWT auth token
     const token = localStorage.getItem('ceylonwheels_token') || localStorage.getItem('token');
 
-    // If there's no token, show Guest immediately
     if (!token) {
       userTown.value = 'Guest';
       return;
@@ -37,18 +50,17 @@ const fetchUserProfile = async () => {
 
     if (response.ok) {
       const userData = await response.json();
-      // Accessing the 'town' field from the nested 'location' object in MongoDB
       if (userData?.location?.town) {
         userTown.value = userData.location.town;
       } else {
-        userTown.value = 'Set Location'; // Fallback if town field isn't populated
+        userTown.value = 'Set Location';
       }
     } else {
       userTown.value = 'Guest';
     }
   } catch (error) {
     console.error("Failed to fetch authenticated user location profile:", error);
-    userTown.value = 'Sri Lanka'; // Universal rescue fallback string
+    userTown.value = 'Sri Lanka';
   }
 };
 
@@ -56,7 +68,6 @@ onMounted(() => {
   fetchUserProfile();
 });
 
-// Watches input to instantly trigger backend data query streams as the user types
 watch(searchQuery, async (newQuery) => {
   const trimmedQuery = newQuery.trim();
   
@@ -81,14 +92,12 @@ watch(searchQuery, async (newQuery) => {
   }
 });
 
-// Closes autocomplete panel when input focus is dropped safely
 const handleBlur = () => {
   setTimeout(() => {
     isDropdownOpen.value = false;
   }, 200);
 };
 
-// Route redirection on selecting a suggestion record item
 const selectVehicle = (vehicleId: string) => {
   searchQuery.value = '';
   isDropdownOpen.value = false;
@@ -112,11 +121,14 @@ const selectVehicle = (vehicleId: string) => {
     
     <nav class="hidden lg:flex items-center space-x-10 text-xs font-bold uppercase tracking-wider text-slate-500 ml-28 mr-auto">
       <router-link to="/cusdashboard" :class="isActive('/cusdashboard') ? 'text-[#4A0004]' : 'hover:text-[#4A0004] transition'">Home</router-link>
-      <router-link to="/categories" class="hover:text-[#4A0004] transition">Vehicles</router-link>
+      <router-link to="/categories" :class="isActive('/categories') ? 'text-[#4A0004]' : 'hover:text-[#4A0004] transition'">Vehicles</router-link>
       <a href="#" class="hover:text-[#4A0004] transition">Deals/Offers</a>
-      <a href="#" class="hover:text-[#4A0004] transition">About Us</a>
-      <a href="#" class="hover:text-[#4A0004] transition">Contact</a>
-      <a href="#" class="hover:text-[#4A0004] transition">Support</a>
+      
+      <button @click="scrollToFooterSection('footer-about')" class="hover:text-[#4A0004] transition uppercase font-bold text-xs cursor-pointer focus:outline-none">About Us</button>
+      
+      <button @click="scrollToFooterSection('footer-contact')" class="hover:text-[#4A0004] transition uppercase font-bold text-xs cursor-pointer focus:outline-none">Contact</button>
+      
+      <router-link to="/support" :class="isActive('/support') ? 'text-[#4A0004]' : 'hover:text-[#4A0004] transition'">Support</router-link>
     </nav>
 
     <div class="relative w-64 mx-4 hidden md:block">
@@ -169,13 +181,11 @@ const selectVehicle = (vehicleId: string) => {
     </div>
 
     <div class="flex items-center space-x-3.5 shrink-0">
-      <!-- Dynamic Real-Time User Location Button Component -->
       <button class="text-slate-500 hover:text-[#4A0004] flex items-center space-x-1 text-xs font-bold transition px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer">
         <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
         </svg>
-        <!-- Binds to userTown variable parsing DB location object -->
         <span class="hidden sm:inline capitalize">{{ userTown }}</span>
       </button>
 
