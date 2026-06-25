@@ -9,7 +9,7 @@ const currentYear = new Date().getFullYear();
   <footer class="bg-brand-maroon text-slate-400 text-xs font-medium border-t border-slate-800 pt-12 pb-6 mt-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 grid grid-cols-1 md:grid-cols-4 gap-10 pb-10 border-b border-slate-800">
       
-      <div class="space-y-4">
+      <div id="footer-about" class="space-y-4">
         <div class="flex items-center space-x-2.5 cursor-pointer" @click="router.push('/cusdashboard')">
           <div class="w-8 h-8 rounded-lg overflow-hidden bg-white/10 flex items-center justify-center p-1">
             <img src="/ceylonwheels-logo.png" alt="CeylonWheels Logo" class="w-full h-full object-cover rounded" />
@@ -41,7 +41,7 @@ const currentYear = new Date().getFullYear();
         </ul>
       </div>
 
-      <div class="space-y-3">
+      <div id="footer-contact" class="space-y-3">
         <h4 class="text-xs font-bold uppercase tracking-wider text-white">Get In Touch</h4>
         <ul class="space-y-2.5">
           <li class="flex items-start space-x-2">
