@@ -11,11 +11,11 @@ const openFaqIndex = ref<number | null>(0);
 
 // Horizontal scrolling vehicle classes collection matching Ceylon context
 const categories = ref([
-  { name: 'Cars', count: '14 Cars', icon: '🚗', img: 'https://images.unsplash.com/photo-1617531653332-bd46c24f2068?auto=format&fit=crop&q=80&w=300' },
-  { name: 'Premium SUVs', count: '22 Vehicles', icon: '🚙', img: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&q=80&w=300' },
-  { name: 'Exotic Supercars', count: '6 Models', icon: '⚡', img: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=300' },
-  { name: 'Vans', count: '11 Vans', icon: '🚐', img: 'https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&q=80&w=300' },
-  { name: 'Wedding Luxury Classics', count: '8 Cars', icon: '✨', img: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=300' },
+  { name: 'Cars', count: '14 Cars', img: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&q=80&w=400' },
+  { name: 'Premium SUVs', count: '22 Vehicles', img: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=400' },
+  { name: 'Jeeps', count: '6 Models', img: 'https://dealerinspire-image-library-prod.s3.us-east-1.amazonaws.com/images/0OsBoMCXZnHQ97dLNxiz1bXNTHbK2swADHpsAco5.jpg' },
+  { name: 'Vans', count: '11 Vans', img: 'https://www.everycar.jp/blog/wp-content/uploads/img241030_19f974.jpg' },
+  { name: 'Cabs / Pickups', count: '8 Vehicles', img: 'https://stimg.cardekho.com/images/carexteriorimages/630x420/Isuzu/S-CAB/9432/1768897007449/front-left-side-47.jpg?tr=w-360' },
 ]);
 
 // Premium Curated Featured Fleet Vehicles Selection Array
@@ -89,7 +89,7 @@ const faqs = ref([
       <div class="relative bg-black rounded-2xl overflow-hidden h-72 flex flex-col justify-center px-6 sm:px-12 text-white shadow-md">
         <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent z-10"></div>
         <img 
-          src="https://images.unsplash.com/photo-1542282088-fe8426682b8f?auto=format&fit=crop&q=80&w=1200" 
+          src="https://cdn.rmsothebys.com/c/b/9/7/7/5/cb9775b02d7239a881aaf4c19fd58da0dd5fdc4d.webp" 
           alt="Premium Performance Car Showcase" 
           class="absolute inset-0 w-full h-full object-cover object-center opacity-65"
         />
@@ -126,7 +126,6 @@ const faqs = ref([
             <div class="h-24 relative bg-slate-100 overflow-hidden">
               <img :src="cat.img" :alt="cat.name" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
               <div class="absolute inset-0 bg-black/10"></div>
-              <span class="absolute bottom-2.5 left-3 text-xl">{{ cat.icon }}</span>
             </div>
             <div class="p-3.5 space-y-0.5">
               <h4 class="text-xs font-bold text-slate-800 group-hover:text-[#4A0004] transition truncate">{{ cat.name }}</h4>
