@@ -4,7 +4,9 @@ import SignupView from '../views/common/Signup/SignupView.vue';
 import LoginView from '../views/common/Login/LoginView.vue';
 import CustomerDashboard from '../views/customer/dashboard/CustomerDashboard.vue';
 import CategoriesView from '../views/customer/categories/CategoriesView.vue';
-import VehicleModelsView from '../views/customer/vehicle_models/VehicleModelsView.vue';
+import SupportView from '../views/customer/support/SupportView.vue';
+import CustomerProfile from '../views/customer/profile/CustomerProfile.vue';
+import SettingsView from '../views/customer/settings/SettingsView.vue';
 
 const routes = [
   {
@@ -28,12 +30,16 @@ const routes = [
     component: CategoriesView
   },
   {
-      // The :category path matches parameters passed directly via code parameters triggers
-      path: '/categories/:category',
-      name: 'category-models',
-      component: VehicleModelsView
-    },
-  // Future roles routes (e.g., /renter, /customer) 
+    path: '/support',
+    name: 'support',
+    component: SupportView
+  },
+  {
+    path: '/cusprofile',
+    name: 'customer-profile',
+    component: CustomerProfile
+  },
+  
 ];
 
 const router = createRouter({
