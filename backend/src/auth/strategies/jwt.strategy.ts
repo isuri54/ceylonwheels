@@ -25,6 +25,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException('Session expired or user profile no longer exists.');
     }
-    return user; 
+    
+    // RETURN AN EXPLICIT OBJECT MAP SO CONTROLLERS GET EXACTLY WHAT THEY EXPECT
+    return {
+      id: user._id.toString(), // Maps MongoDB _id safely to a clean string 'id'
+      email: user.email,
+      location: user.location
+    }; 
   }
 }
