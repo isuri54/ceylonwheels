@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { User, UserSchema } from './schemas/user.schema';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { UsersService } from '../users/users.service';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy], // Injected strategy protects incoming private routes
+  providers: [AuthService, JwtStrategy, UsersService], // Injected strategy protects incoming private routes
   exports: [PassportModule, JwtModule, AuthService],
 })
 export class AuthModule {}
