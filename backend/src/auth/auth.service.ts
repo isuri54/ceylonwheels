@@ -14,7 +14,7 @@ export class AuthService {
     private readonly jwtService: JwtService, // Inject JwtService
   ) {}
 
-  async signup(signupDto: SignupDto): Promise<{ success: boolean; message: string; accessToken: string }> {
+  async signup(signupDto: SignupDto): Promise<{ success: boolean; message: string; accessToken: string; role?: string }> {
     const { email, password, role, isCorporateEntity, fullName, location, phone } = signupDto;
 
     const existingUser = await this.userModel.findOne({ email });
@@ -49,7 +49,8 @@ export class AuthService {
         success: true,
         message: 'Account initialized successfully for CeylonWheels.',
         // Generate and sign the secure access token string
-        accessToken: this.jwtService.sign(jwtPayload), 
+        accessToken: this.jwtService.sign(jwtPayload),
+        role: savedUser.role,
       };
     } catch (error) {
       throw new InternalServerErrorException('Database failure processing registration records.');
@@ -57,7 +58,7 @@ export class AuthService {
   }
 
   // login
-  async login(loginDto: LoginDto): Promise<{ success: boolean; message: string; accessToken: string }> {
+  async login(loginDto: LoginDto): Promise<{ success: boolean; message: string; accessToken: string; role?: string }> {
     const { email, password } = loginDto;
 
     // Look up user by lowercase unique email index
@@ -84,6 +85,7 @@ export class AuthService {
       success: true,
       message: 'Authentication validated successfully.',
       accessToken: this.jwtService.sign(jwtPayload),
+      role: user.role,
     };
   }
 }
