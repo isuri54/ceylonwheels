@@ -7,6 +7,7 @@ import CategoriesView from '../views/customer/categories/CategoriesView.vue';
 import SupportView from '../views/customer/support/SupportView.vue';
 import CustomerProfile from '../views/customer/profile/CustomerProfile.vue';
 import SettingsView from '../views/customer/settings/SettingsView.vue';
+import RenterDashboard from '../views/renter/dashboard/RentersDashboard.vue';
 
 const routes = [
   {
@@ -39,7 +40,16 @@ const routes = [
     name: 'customer-profile',
     component: CustomerProfile
   },
-  
+  {
+    path: '/settings',
+    name: 'settings',
+    component: SettingsView
+  },
+  {
+    path: '/renterdashboard',
+    name: 'renter-dashboard',
+    component: RenterDashboard
+  }
 ];
 
 const router = createRouter({
