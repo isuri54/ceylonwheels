@@ -3,31 +3,24 @@ import { ref } from 'vue';
 import RenterNavbar from '../../../components/RenterNavbar.vue';
 import RenterSidebar from '../../../components/RenterSidebar.vue';
 
-// Minimal reactive view state if needed later for filtering
+// Filter state for dashboard timeline
 const activeTimeFilter = ref<'today' | 'week'>('today');
 </script>
 
 <template>
   <div class="min-h-screen bg-[#FDFCFB] flex flex-col text-slate-800 antialiased">
-    <!-- 1. Fixed Top Navbar -->
     <RenterNavbar />
 
-    <!-- 2. Core Layout Wrapper (Handles structural layout grid side-by-side) -->
     <div class="flex flex-1 w-full max-w-[1600px] mx-auto">
       
-      <!-- Sticky Sidebar Navigation Column -->
       <RenterSidebar />
 
-      <!-- Scrollable Main Dashboard Panel Content Area -->
       <main class="flex-1 p-4 sm:p-8 md:p-10 min-w-0">
         
-        <header class="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-100 pb-6">
+        <header class="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-100 pb-2">
           <div>
-            <div class="flex items-center space-x-2 text-[10px] font-bold text-[#4A0004] tracking-widest uppercase mb-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-[#4A0004]"></span>
-              <span>Fleet Partner Control</span>
-            </div>
-            <h1 class="text-3xl font-black text-slate-900 tracking-tight">Fleet Operations</h1>
+            
+            <h1 class="text-3xl font-black text-slate-900 tracking-tight">Fleet Overview</h1>
           </div>
           
           <div class="flex items-center space-x-1 bg-slate-100/80 p-1 rounded-lg self-start sm:self-auto text-[11px] font-bold">
@@ -36,65 +29,64 @@ const activeTimeFilter = ref<'today' | 'week'>('today');
           </div>
         </header>
 
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <section class="grid grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 mb-12">
           
-          <div class="bg-gradient-to-br from-[#290002] via-[#4A0004] to-[#1F0001] rounded-2xl p-6 text-white flex flex-col justify-between shadow-xl relative overflow-hidden group min-h-[180px]">
-            <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px)] bg-[size:16px] pointer-events-none"></div>
+          <div class="bg-gradient-to-br from-[#3B0003] via-[#4A0004] to-[#250002] rounded-2xl p-5 text-white flex flex-col justify-between shadow-md relative overflow-hidden h-[160px]">
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px)] bg-[size:12px] pointer-events-none"></div>
             <div class="flex justify-between items-start relative z-10">
-              <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-300">Fleet Strength</span>
-              <span class="text-[10px] font-bold bg-white/10 px-2 py-0.5 rounded-full text-white backdrop-blur-sm">Total Metrics</span>
+              <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-300">Total Fleet</span>
+              <span class="text-[9px] font-bold bg-white/10 px-2 py-0.5 rounded-full text-white backdrop-blur-sm">Vehicles</span>
             </div>
-            <div class="mt-4 relative z-10">
-              <div class="text-5xl font-black tracking-tighter">18</div>
-              <p class="text-xs font-medium text-slate-300 mt-1">Total managed vehicles registered under contract.</p>
+            <div class="my-auto relative z-10">
+              <div class="text-4xl font-black tracking-tight">18</div>
             </div>
-            <div class="grid grid-cols-2 gap-2 pt-4 border-t border-white/10 mt-4 relative z-10 text-center">
-              <div>
-                <div class="text-lg font-black text-emerald-400">12</div>
-                <div class="text-[9px] font-bold uppercase text-slate-400 tracking-wider">Available</div>
-              </div>
-              <div class="border-l border-white/10">
-                <div class="text-lg font-black text-amber-400">5</div>
-                <div class="text-[9px] font-bold uppercase text-slate-400 tracking-wider">Rented</div>
-              </div>
+            <div class="pt-2.5 border-t border-white/10 relative z-10 flex justify-between text-[10px] text-slate-300 font-bold">
+              <span>12 Available</span>
+              <span class="text-amber-300">5 Rented</span>
             </div>
           </div>
 
-          <div class="bg-white border border-slate-200/80 rounded-2xl p-6 flex flex-col justify-between shadow-sm min-h-[180px] hover:border-slate-300 transition">
-            <div class="flex justify-between items-start">
-              <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Gross Yield</span>
-              <span class="text-[10px] font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full uppercase tracking-wider">Live Statement</span>
+          <div class="bg-gradient-to-br from-[#064E3B] via-[#047857] to-[#065F46] rounded-2xl p-5 text-white flex flex-col justify-between shadow-md relative overflow-hidden h-[160px]">
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px)] bg-[size:12px] pointer-events-none"></div>
+            <div class="flex justify-between items-start relative z-10">
+              <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-200">Total Earnings</span>
+              <span class="text-[9px] font-bold bg-white/10 px-2 py-0.5 rounded-full text-emerald-100 backdrop-blur-sm">This Month</span>
             </div>
-            <div class="my-auto pt-2">
-              <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wide mb-0.5">Monthly Revenue</div>
-              <div class="text-3xl font-black text-slate-900 tracking-tight">Rs. 385,000</div>
+            <div class="my-auto relative z-10">
+              <div class="text-2xl sm:text-3xl font-black tracking-tight">Rs. 385,000</div>
             </div>
-            <div class="text-[10px] font-medium text-slate-400 border-t border-slate-100 pt-3 flex items-center justify-between">
-              <span>Pacing against target allocation</span>
-              <span class="font-bold text-slate-700">84%</span>
+            <div class="pt-2.5 border-t border-white/10 relative z-10 flex justify-between text-[10px] text-emerald-200">
+              <span>Progress to target</span>
+              <span class="font-bold text-white">84%</span>
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-4">
-            <div class="bg-white border border-slate-200/80 rounded-2xl p-5 flex flex-col justify-between shadow-sm group hover:border-[#4A0004]/30 transition">
-              <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Approvals</div>
-              <div class="my-3">
-                <div class="text-4xl font-black text-slate-900 tracking-tight group-hover:text-[#4A0004] transition">03</div>
-                <div class="text-[10px] font-bold text-[#4A0004] mt-0.5 uppercase tracking-wider">Pending Requests</div>
-              </div>
-              <div class="text-[9px] font-medium text-slate-400 bg-slate-50 p-1.5 rounded-lg text-center font-bold">Needs Review</div>
+          <div class="bg-gradient-to-br from-[#1E3A8A] via-[#1D4ED8] to-[#1E40AF] rounded-2xl p-5 text-white flex flex-col justify-between shadow-md relative overflow-hidden h-[160px]">
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px)] bg-[size:12px] pointer-events-none"></div>
+            <div class="flex justify-between items-start relative z-10">
+              <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-200">New Bookings</span>
+              <span class="text-[9px] font-bold bg-white/10 px-2 py-0.5 rounded-full text-blue-100 backdrop-blur-sm">Pending</span>
             </div>
-            
-            <div class="bg-white border border-slate-200/80 rounded-2xl p-5 flex flex-col justify-between shadow-sm">
-              <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Sentiment</div>
-              <div class="my-3">
-                <div class="text-4xl font-black text-slate-900 tracking-tight flex items-baseline space-x-1">
-                  <span>4.8</span>
-                  <span class="text-xs text-amber-500 font-normal">★</span>
-                </div>
-                <div class="text-[10px] font-bold text-slate-500 mt-0.5 uppercase tracking-wider">Customer Rating</div>
-              </div>
-              <div class="text-[9px] font-medium text-emerald-600 bg-emerald-50/50 p-1.5 rounded-lg text-center font-bold">Top 5% Tier</div>
+            <div class="my-auto relative z-10">
+              <div class="text-4xl font-black tracking-tight">03</div>
+            </div>
+            <div class="pt-2.5 border-t border-white/10 relative z-10 text-[10px] text-blue-200 font-bold">
+              <span>Requires approval</span>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-br from-[#1E293B] via-[#334155] to-[#0F172A] rounded-2xl p-5 text-white flex flex-col justify-between shadow-md relative overflow-hidden h-[160px]">
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px)] bg-[size:12px] pointer-events-none"></div>
+            <div class="flex justify-between items-start relative z-10">
+              <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-300">Rating</span>
+              <span class="text-[9px] font-bold bg-white/10 px-2 py-0.5 rounded-full text-amber-300 backdrop-blur-sm">Reviews</span>
+            </div>
+            <div class="my-auto relative z-10 flex items-baseline space-x-1">
+              <div class="text-4xl font-black tracking-tight">4.8</div>
+              <span class="text-amber-400 text-lg">★</span>
+            </div>
+            <div class="pt-2.5 border-t border-white/10 relative z-10 text-[10px] text-slate-300 font-bold">
+              <span class="text-emerald-400">Top 5% Renter tier</span>
             </div>
           </div>
 
@@ -103,10 +95,10 @@ const activeTimeFilter = ref<'today' | 'week'>('today');
         <section>
           <div class="flex items-center justify-between mb-6">
             <div>
-              <h2 class="text-lg font-black text-slate-900 tracking-tight">Today's Agenda Ledger</h2>
-              <p class="text-xs font-semibold text-slate-400">Chronological pipeline of vehicle deployments and physical turnovers.</p>
+              <h2 class="text-lg font-black text-slate-900 tracking-tight">Today's Schedule</h2>
+              <p class="text-xs font-semibold text-slate-400">Timetable of vehicle handovers and customer arrivals.</p>
             </div>
-            <div class="text-xs font-bold text-[#4A0004] hover:underline cursor-pointer tracking-tight">View Master Calendar →</div>
+            <div class="text-xs font-bold text-[#4A0004] hover:underline cursor-pointer tracking-tight">View Full Calendar →</div>
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
@@ -125,12 +117,12 @@ const activeTimeFilter = ref<'today' | 'week'>('today');
               
               <div class="my-4">
                 <h4 class="text-base font-bold text-slate-900">Toyota Prius</h4>
-                <p class="text-[11px] font-medium text-slate-400 mt-0.5">Ensure detailing protocol and full charge status checkpoint.</p>
+                <p class="text-[11px] font-medium text-slate-400 mt-0.5">Check cleanliness and battery charge level before handing over keys.</p>
               </div>
               
               <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
                 <span class="text-slate-400">Status: <strong class="text-amber-600 font-bold">Ready at Bay</strong></span>
-                <button class="text-slate-700 hover:text-[#4A0004] font-bold cursor-pointer transition">Dispatch</button>
+                <button class="text-slate-700 hover:text-[#4A0004] font-bold cursor-pointer transition">Hand Over</button>
               </div>
             </div>
 
@@ -148,11 +140,11 @@ const activeTimeFilter = ref<'today' | 'week'>('today');
               
               <div class="my-4">
                 <h4 class="text-base font-bold text-slate-900">Honda Vezel</h4>
-                <p class="text-[11px] font-medium text-slate-400 mt-0.5">Standard intake evaluation, fuel monitoring, and security logging.</p>
+                <p class="text-[11px] font-medium text-slate-400 mt-0.5">Check fuel levels, look for damage, and accept keys.</p>
               </div>
               
               <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                <span class="text-slate-400">Status: <strong class="text-slate-500 font-bold">In Transit</strong></span>
+                <span class="text-slate-400">Status: <strong class="text-slate-500 font-bold">On the Way</strong></span>
                 <button class="text-slate-700 hover:text-[#4A0004] font-bold cursor-pointer transition">Check-In</button>
               </div>
             </div>
@@ -165,18 +157,18 @@ const activeTimeFilter = ref<'today' | 'week'>('today');
                   4:00 PM
                 </div>
                 <span class="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-100">
-                  Booking Starts
+                  Trip Starts
                 </span>
               </div>
               
               <div class="my-4">
                 <h4 class="text-base font-bold text-slate-900">BMW X5</h4>
-                <p class="text-[11px] font-medium text-slate-400 mt-0.5">VIP Chauffeur assignment validation & keys verification.</p>
+                <p class="text-[11px] font-medium text-slate-400 mt-0.5">Verify driver details and sign contract files.</p>
               </div>
               
               <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                <span class="text-slate-400">Status: <strong class="text-slate-400 font-bold">Staged</strong></span>
-                <button class="text-slate-700 hover:text-[#4A0004] font-bold cursor-pointer transition">Review Contract</button>
+                <span class="text-slate-400">Status: <strong class="text-slate-400 font-bold">Ready</strong></span>
+                <button class="text-slate-700 hover:text-[#4A0004] font-bold cursor-pointer transition">Review Agreement</button>
               </div>
             </div>
 
