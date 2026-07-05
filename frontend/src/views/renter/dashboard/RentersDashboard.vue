@@ -95,80 +95,93 @@ const activeTimeFilter = ref<'today' | 'week'>('today');
         <section>
           <div class="flex items-center justify-between mb-6">
             <div>
-              <h2 class="text-lg font-black text-slate-900 tracking-tight">Today's Schedule</h2>
-              <p class="text-xs font-semibold text-slate-400">Timetable of vehicle handovers and customer arrivals.</p>
+              <h2 class="text-lg font-bold text-slate-900 tracking-tight">Today's Schedule</h2>
+              <p class="text-xs text-slate-500">Timetable of vehicle handovers and customer arrivals.</p>
             </div>
-            <div class="text-xs font-bold text-[#4A0004] hover:underline cursor-pointer tracking-tight">View Full Calendar →</div>
+            <button class="text-xs font-semibold text-[#4A0004] hover:text-[#320003] transition tracking-tight bg-slate-100 px-3 py-1.5 rounded-lg cursor-pointer">
+              View Full Calendar →
+            </button>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <div class="bg-white border border-slate-200 rounded-2xl p-6 relative shadow-sm transition hover:shadow-md flex flex-col justify-between min-h-[170px]">
-              <div class="absolute top-0 left-6 right-6 h-1 bg-[#4A0004] rounded-b-full"></div>
-              
-              <div class="flex justify-between items-center mt-2">
-                <div class="text-sm font-black text-[#4A0004] tracking-tight bg-[#4A0004]/5 px-2.5 py-1 rounded-lg">
-                  9:00 AM
+            <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between min-h-[220px]">
+              <div>
+                <div class="flex justify-between items-baseline border-b border-slate-100 pb-3 mb-4">
+                  <span class="text-sm font-bold text-slate-900">9:00 AM</span>
+                  <span class="text-[11px] font-medium text-blue-600">Customer Pickup</span>
                 </div>
-                <span class="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
-                  Customer Pickup
-                </span>
+                
+                <div class="flex items-start justify-between gap-4">
+                  <div class="flex-1 min-w-0">
+                    <h4 class="text-base font-bold text-slate-900 truncate">Toyota Prius</h4>
+                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">Check cleanliness and battery charge level before handing over keys.</p>
+                  </div>
+                  <div class="w-20 h-14 bg-slate-50 border border-slate-100 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden">
+                    <span class="text-[10px] text-slate-400 font-medium">No Image</span>
+                  </div>
+                </div>
               </div>
               
-              <div class="my-4">
-                <h4 class="text-base font-bold text-slate-900">Toyota Prius</h4>
-                <p class="text-[11px] font-medium text-slate-400 mt-0.5">Check cleanliness and battery charge level before handing over keys.</p>
-              </div>
-              
-              <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                <span class="text-slate-400">Status: <strong class="text-amber-600 font-bold">Ready at Bay</strong></span>
-                <button class="text-slate-700 hover:text-[#4A0004] font-bold cursor-pointer transition">Hand Over</button>
+              <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs mt-4">
+                <div class="text-slate-500">
+                  Status: <span class="text-amber-600 font-semibold bg-amber-50 px-2 py-0.5 rounded">Ready at Bay</span>
+                </div>
+                <button class="text-[#4A0004] hover:underline font-bold cursor-pointer transition">Hand Over</button>
               </div>
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-2xl p-6 relative shadow-sm transition hover:shadow-md flex flex-col justify-between min-h-[170px]">
-              <div class="absolute top-0 left-6 right-6 h-1 bg-slate-300 rounded-b-full"></div>
-              
-              <div class="flex justify-between items-center mt-2">
-                <div class="text-sm font-black text-slate-700 tracking-tight bg-slate-100 px-2.5 py-1 rounded-lg">
-                  11:30 AM
+            <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between min-h-[220px]">
+              <div>
+                <div class="flex justify-between items-baseline border-b border-slate-100 pb-3 mb-4">
+                  <span class="text-sm font-bold text-slate-900">11:30 AM</span>
+                  <span class="text-[11px] font-medium text-emerald-600">Vehicle Return</span>
                 </div>
-                <span class="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
-                  Vehicle Return
-                </span>
+                
+                <div class="flex items-start justify-between gap-4">
+                  <div class="flex-1 min-w-0">
+                    <h4 class="text-base font-bold text-slate-900 truncate">Honda Vezel</h4>
+                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">Check fuel levels, look for damage, and accept keys.</p>
+                  </div>
+                  <div class="w-20 h-14 bg-slate-50 border border-slate-100 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden">
+                    <span class="text-[10px] text-slate-400 font-medium">No Image</span>
+                    <!-- <img src="/path-to-vezel.jpg" alt="Honda Vezel" class="w-full h-full object-cover" /> -->
+                  </div>
+                </div>
               </div>
               
-              <div class="my-4">
-                <h4 class="text-base font-bold text-slate-900">Honda Vezel</h4>
-                <p class="text-[11px] font-medium text-slate-400 mt-0.5">Check fuel levels, look for damage, and accept keys.</p>
-              </div>
-              
-              <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                <span class="text-slate-400">Status: <strong class="text-slate-500 font-bold">On the Way</strong></span>
-                <button class="text-slate-700 hover:text-[#4A0004] font-bold cursor-pointer transition">Check-In</button>
+              <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs mt-4">
+                <div class="text-slate-500">
+                  Status: <span class="text-slate-600 font-semibold bg-slate-100 px-2 py-0.5 rounded">On the Way</span>
+                </div>
+                <button class="text-[#4A0004] hover:underline font-bold cursor-pointer transition">Check-In</button>
               </div>
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-2xl p-6 relative shadow-sm transition hover:shadow-md flex flex-col justify-between min-h-[170px]">
-              <div class="absolute top-0 left-6 right-6 h-1 bg-slate-800 rounded-b-full"></div>
-              
-              <div class="flex justify-between items-center mt-2">
-                <div class="text-sm font-black text-slate-900 tracking-tight bg-slate-900 text-white px-2.5 py-1 rounded-lg">
-                  4:00 PM
+            <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between min-h-[220px]">
+              <div>
+                <div class="flex justify-between items-baseline border-b border-slate-100 pb-3 mb-4">
+                  <span class="text-sm font-bold text-slate-900">4:00 PM</span>
+                  <span class="text-[11px] font-medium text-purple-600">Trip Starts</span>
                 </div>
-                <span class="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-100">
-                  Trip Starts
-                </span>
+                
+                <div class="flex items-start justify-between gap-4">
+                  <div class="flex-1 min-w-0">
+                    <h4 class="text-base font-bold text-slate-900 truncate">BMW X5</h4>
+                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">Verify driver details and sign contract files.</p>
+                  </div>
+                  <div class="w-20 h-14 bg-slate-50 border border-slate-100 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden">
+                    <span class="text-[10px] text-slate-400 font-medium">No Image</span>
+                    <!-- <img src="/path-to-x5.jpg" alt="BMW X5" class="w-full h-full object-cover" /> -->
+                  </div>
+                </div>
               </div>
               
-              <div class="my-4">
-                <h4 class="text-base font-bold text-slate-900">BMW X5</h4>
-                <p class="text-[11px] font-medium text-slate-400 mt-0.5">Verify driver details and sign contract files.</p>
-              </div>
-              
-              <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                <span class="text-slate-400">Status: <strong class="text-slate-400 font-bold">Ready</strong></span>
-                <button class="text-slate-700 hover:text-[#4A0004] font-bold cursor-pointer transition">Review Agreement</button>
+              <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs mt-4">
+                <div class="text-slate-500">
+                  Status: <span class="text-slate-600 font-semibold bg-slate-100 px-2 py-0.5 rounded">Ready</span>
+                </div>
+                <button class="text-[#4A0004] hover:underline font-bold cursor-pointer transition">Review Agreement</button>
               </div>
             </div>
 
