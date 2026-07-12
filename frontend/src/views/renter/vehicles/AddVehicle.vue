@@ -85,24 +85,35 @@ const documentFiles = ref<{ [key: string]: File }>({});
 
 onMounted(async () => {
   try {
-    const response = await fetch('http://localhost:3000/renter/profile-check');
+    const token = localStorage.getItem('ceylonwheels_token') || localStorage.getItem('token');
+    if (!token) {
+      return;
+    }
+
+    const response = await fetch('http://localhost:3000/api/v1/auth/profile', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
     if (response.ok) {
       const data = await response.json();
-      if (data.hasRegisteredBefore) {
+      if (data) {
         isFirstTimeOwner.value = false;
-        form.value.ownerName = data.profile.name || '';
-        form.value.ownerPhone = data.profile.phone || '';
-        form.value.ownerEmail = data.profile.email || '';
-        form.value.nicNumber = data.profile.nic || '';
-        form.value.bankAccountHolder = data.profile.bankHolder || '';
-        form.value.bankName = data.profile.bankName || '';
-        form.value.bankBranch = data.profile.bankBranch || '';
-        form.value.bankAccountNumber = data.profile.bankAccount || '';
-        form.value.addressHouseNumber = data.profile.houseNum || '';
-        form.value.addressStreet = data.profile.street || '';
-        form.value.addressCity = data.profile.city || '';
-        form.value.addressDistrict = data.profile.district || '';
-        form.value.addressPostalCode = data.profile.postalCode || '';
+        form.value.ownerName = data.fullName || '';
+        form.value.ownerPhone = data.phone || '';
+        form.value.ownerEmail = data.email || '';
+        form.value.nicNumber = data.nic || '';
+        form.value.bankAccountHolder = data.bankHolder || '';
+        form.value.bankName = data.bankName || '';
+        form.value.bankBranch = data.bankBranch || '';
+        form.value.bankAccountNumber = data.bankAccount || '';
+        form.value.addressHouseNumber = data.houseNum || '';
+        form.value.addressStreet = data.street || '';
+        form.value.addressCity = data.city || '';
+        form.value.addressDistrict = data.district || '';
+        form.value.addressPostalCode = data.postalCode || '';
       }
     }
   } catch (error) {
@@ -142,8 +153,7 @@ const submitForm = async () => {
   });
 
   try {
-    const response = await fetch('http://localhost:3000/vehicles', {
-      method: 'POST',
+      const response = await fetch('http://localhost:3000/api/v1/vehicles', {
       body: formData
     });
 
@@ -192,7 +202,19 @@ const submitForm = async () => {
               <div class="flex flex-col space-y-1.5">
                 <label class="text-slate-500 tracking-wide">Vehicle Category</label>
                 <select v-model="form.category" class="border-b-2 border-slate-200 rounded-none py-2 bg-white outline-none focus:border-[#4A0004] text-slate-800 font-medium transition">
-                  <option>Car</option><option>Van</option><option>SUV</option><option>Bike</option><option>Bus</option>
+                  <option value="Cars">Car</option>
+                  <option value="SUVs">SUV</option>
+                  <option value="Jeeps">Jeep</option>
+                  <option value="Cabs / Pickups">Cab / Pickup</option>
+                  <option value="Three-Wheelers">Three-Wheeler</option>
+                  <option value="Vans">Van</option>
+                  <option value="Lorries & Commercial Trucks">Lorry & Commercial Truck</option>
+                  <option value="Heavy Machinery & Construction">Heavy Machinery & Construction</option>
+                  <option value="Electric Cars">Electric Car</option>
+                  <option value="Wedding & Classic Luxury">Wedding & Classic Luxury</option>
+                  <option value="Supercars & Sports Cars">Supercar & Sports Car</option>
+                  <option value="Buses & Coaches">Bus & Coach</option>
+                  <option value="Motorbikes & Scooters">Motorbike & Scooter</option>
                 </select>
               </div>
               <div class="flex flex-col space-y-1.5">
