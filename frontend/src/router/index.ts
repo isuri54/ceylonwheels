@@ -8,6 +8,8 @@ import SupportView from '../views/customer/support/SupportView.vue';
 import CustomerProfile from '../views/customer/profile/CustomerProfile.vue';
 import SettingsView from '../views/customer/settings/SettingsView.vue';
 import RenterDashboard from '../views/renter/dashboard/RentersDashboard.vue';
+import MyVechicles from '../views/renter/vehicles/MyVechicles.vue';
+import AddVehicle from '../views/renter/vehicles/AddVehicle.vue';
 
 const routes = [
   {
@@ -49,6 +51,16 @@ const routes = [
     path: '/renterdashboard',
     name: 'renter-dashboard',
     component: RenterDashboard
+  },
+  {
+    path: '/rentervehicles',
+    name: 'renter-vehicles',
+    component: MyVechicles
+  },
+  {
+    path: '/addvehicle',
+    name: 'add-vehicle',
+    component: AddVehicle
   }
 ];
 
