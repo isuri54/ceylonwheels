@@ -53,7 +53,7 @@ const vehicles = ref([
         
         <header class="mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-6">
           <div>
-            <h1 class="text-3xl font-bold text-slate-900 tracking-tight">My Vehicles</h1>
+            <h1 class="text-3xl font-black text-slate-900 tracking-tight">My Vehicles</h1>
           </div>
           
           <router-link 
