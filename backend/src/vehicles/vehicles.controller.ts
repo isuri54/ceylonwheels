@@ -14,6 +14,7 @@ import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { VehiclesService } from './vehicles.service';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { Param } from '@nestjs/common';
 
 @Controller('vehicles') // Context URL path: http://localhost:3000/vehicles
 export class VehiclesController {
@@ -56,12 +57,15 @@ export class VehiclesController {
 
     if (files && files.length > 0) {
       files.forEach(file => {
+        // Force replace any Windows backslashes (\) with web standard forward slashes (/)
+        const normalizedPath = file.path.replace(/\\/g, '/');
+
         if (file.fieldname.startsWith('image_')) {
           const slotName = file.fieldname.replace('image_', '');
-          vehicleImages[slotName] = file.path;
+          vehicleImages[slotName] = normalizedPath;
         } else if (file.fieldname.startsWith('doc_')) {
           const slotName = file.fieldname.replace('doc_', '');
-          documentFiles[slotName] = file.path;
+          documentFiles[slotName] = normalizedPath;
         }
       });
     }
@@ -74,5 +78,19 @@ export class VehiclesController {
       }
       throw error;
     }
+  }
+
+  // CUSTOMER FACING: GET BY CATEGORY
+  @Get('category')
+  @HttpCode(HttpStatus.OK)
+  async getByCategory(@Query('name') categoryName: string) {
+    return await this.vehiclesService.findByCategory(categoryName);
+  }
+
+  // CUSTOMER FACING: GET BY ID
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async getById(@Param('id') id: string) {
+    return await this.vehiclesService.findById(id);
   }
 }
