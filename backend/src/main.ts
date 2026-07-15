@@ -4,10 +4,12 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Connection } from 'mongoose';
 import { getConnectionToken } from '@nestjs/mongoose';
+import { NestExpressApplication } from '@nestjs/platform-express/interfaces/nest-express-application.interface';
+import { join } from 'path';
 
 async function bootstrap() {
   // Create the NestJS application instance using the root AppModule
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Fetch configurations
   const configService = app.get(ConfigService);
@@ -49,6 +51,11 @@ async function bootstrap() {
   } catch (error) {
     console.log('Could not verify database status at startup.');
   }
+
+  // Serve everything inside root uploads folder publicly over http://localhost:3000/uploads/...
+  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
+    prefix: '/uploads/',
+  });
 
   await app.listen(port);
   console.log(`CeylonWheels backend is running on: http://localhost:${port}/api/v1`);
