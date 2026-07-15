@@ -4,6 +4,7 @@ import { MongooseModule, InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
+import { VehiclesModule } from './vehicles/vehicles.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AuthModule } from './auth/auth.module';
       }),
     }),
     AuthModule,
+    VehiclesModule,
   ],
   controllers: [AppController],
 })
