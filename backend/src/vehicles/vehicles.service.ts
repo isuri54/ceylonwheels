@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Vehicle, VehicleDocument } from './schemas/vehicle.schema';
+import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class VehiclesService {
@@ -49,5 +50,35 @@ export class VehiclesService {
     });
 
     return await newRecord.save();
+  }
+
+  // CUSTOMER FACING FETCH LOGIC
+
+  async findByCategory(category: string): Promise<Vehicle[]> {
+    try {
+      const normalizedCategory = (category || '').trim();
+      const categoryFilter = normalizedCategory
+        ? { category: { $regex: `^${normalizedCategory.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, $options: 'i' } }
+        : {};
+
+      return await this.vehicleModel.find(categoryFilter)
+        .select('_id brand model modelYear dailyPrice fuelType transmission pickupLocation addressCity vehicleImages category')
+        .sort({ createdAt: -1 })
+        .exec();
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to retrieve vehicles for this category.');
+    }
+  }
+
+  // Vehicle details fetch logic
+
+  async findById(id: string): Promise<Vehicle> {
+    try {
+      const match = await this.vehicleModel.findById(id).exec();
+      if (!match) throw new NotFoundException('Vehicle target missing.');
+      return match;
+    } catch (error) {
+      throw new InternalServerErrorException('Database aggregation fault.');
+    }
   }
 }
