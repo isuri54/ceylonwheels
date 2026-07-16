@@ -141,9 +141,10 @@ const handleFileChange = (event: Event, slotName: string, isImage = false) => {
 const submitForm = async () => {
   isSubmitting.value = true;
   const formData = new FormData();
-  
+  const token = localStorage.getItem('ceylonwheels_token') || localStorage.getItem('token');
+
   formData.append('data', JSON.stringify(form.value));
-  
+
   Object.keys(vehicleImages.value).forEach((slot) => {
     formData.append(`image_${slot}`, vehicleImages.value[slot]);
   });
@@ -153,8 +154,10 @@ const submitForm = async () => {
   });
 
   try {
-      const response = await fetch('http://localhost:3000/api/v1/vehicles', {
-      body: formData
+    const response = await fetch('http://localhost:3000/api/v1/vehicles', {
+      method: 'POST',
+      body: formData,
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
     });
 
     if (response.status === 409) {
@@ -165,10 +168,13 @@ const submitForm = async () => {
     if (response.ok) {
       alert('Vehicle registration package submitted successfully.');
     } else {
+      const errorText = await response.text();
+      console.error('Vehicle submit failed:', errorText);
       alert('Failed to submit vehicle registration data.');
     }
   } catch (error) {
-    console.error(error);
+    console.error('Vehicle submit error:', error);
+    alert('Unable to submit the vehicle registration request right now.');
   } finally {
     isSubmitting.value = false;
   }
@@ -505,7 +511,7 @@ const submitForm = async () => {
 
               <div class="flex flex-col space-y-1.5">
                 <label class="text-slate-500">NIC / Passport Number</label>
-                <input v-model="form.nicNumber" type="text" :readonly="!isFirstTimeOwner" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
+                <input v-model="form.nicNumber" type="text" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
               </div>
               <div class="flex flex-col space-y-1.5">
                 <label class="text-slate-500">Legal Ownership Confirmation Type</label>
@@ -530,19 +536,19 @@ const submitForm = async () => {
             <div class="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-6 text-xs font-semibold mb-8">
               <div class="flex flex-col space-y-1.5">
                 <label class="text-slate-500">Account Holder Title Name</label>
-                <input v-model="form.bankAccountHolder" type="text" :readonly="!isFirstTimeOwner" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
+                <input v-model="form.bankAccountHolder" type="text"  :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
               </div>
               <div class="flex flex-col space-y-1.5">
                 <label class="text-slate-500">Corporate Bank Name</label>
-                <input v-model="form.bankName" type="text" placeholder="e.g. Commercial Bank" :readonly="!isFirstTimeOwner" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
+                <input v-model="form.bankName" type="text" placeholder="e.g. Commercial Bank" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
               </div>
               <div class="flex flex-col space-y-1.5">
                 <label class="text-slate-500">Branch Location</label>
-                <input v-model="form.bankBranch" type="text" placeholder="e.g. Colombo 03" :readonly="!isFirstTimeOwner" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
+                <input v-model="form.bankBranch" type="text" placeholder="e.g. Colombo 03" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
               </div>
               <div class="flex flex-col space-y-1.5">
                 <label class="text-slate-500">Account Number</label>
-                <input v-model="form.bankAccountNumber" type="text" :readonly="!isFirstTimeOwner" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
+                <input v-model="form.bankAccountNumber" type="text" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
               </div>
             </div>
 
@@ -550,29 +556,29 @@ const submitForm = async () => {
             <div class="grid grid-cols-2 md:grid-cols-5 gap-x-6 gap-y-6 text-xs font-semibold">
               <div class="flex flex-col space-y-1.5">
                 <label class="text-slate-500">House / Room / Suite</label>
-                <input v-model="form.addressHouseNumber" type="text" :readonly="!isFirstTimeOwner" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
+                <input v-model="form.addressHouseNumber" type="text" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
               </div>
               <div class="flex flex-col space-y-1.5">
                 <label class="text-slate-500">Street Name</label>
-                <input v-model="form.addressStreet" type="text" :readonly="!isFirstTimeOwner" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
+                <input v-model="form.addressStreet" type="text" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
               </div>
               <div class="flex flex-col space-y-1.5">
                 <label class="text-slate-500">City / Ward Area</label>
-                <input v-model="form.addressCity" type="text" :readonly="!isFirstTimeOwner" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
+                <input v-model="form.addressCity" type="text" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
               </div>
               <div class="flex flex-col space-y-1.5">
                 <label class="text-slate-500">District</label>
-                <input v-model="form.addressDistrict" type="text" :readonly="!isFirstTimeOwner" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
+                <input v-model="form.addressDistrict" type="text" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
               </div>
               <div class="flex flex-col space-y-1.5 col-span-2 md:col-span-1">
                 <label class="text-slate-500">Postal Zone Code</label>
-                <input v-model="form.addressPostalCode" type="text" :readonly="!isFirstTimeOwner" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
+                <input v-model="form.addressPostalCode" type="text" :class="{'bg-slate-50 text-slate-500 border-slate-100 px-2': !isFirstTimeOwner}" class="border-b-2 border-slate-200 rounded-none py-2 outline-none focus:border-[#4A0004] transition" required />
               </div>
             </div>
           </div>
 
           <div class="flex justify-end pt-6">
-            <button type="submit" :disabled="isSubmitting" class="bg-[#4A0004] hover:bg-[#2A0002] disabled:bg-slate-300 text-white text-xs font-black tracking-widest uppercase px-10 py-4 rounded-lg transition shadow hover:shadow-lg cursor-pointer">
+            <button type="button" @click="submitForm" :disabled="isSubmitting" class="bg-[#4A0004] hover:bg-[#2A0002] disabled:bg-slate-300 text-white text-xs font-black tracking-widest uppercase px-10 py-4 rounded-lg transition shadow hover:shadow-lg cursor-pointer">
               {{ isSubmitting ? 'Validating Application Details...' : 'Submit Fleet Application' }}
             </button>
           </div>
