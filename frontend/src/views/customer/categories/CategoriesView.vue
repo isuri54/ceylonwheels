@@ -73,6 +73,14 @@ const allCategories = ref([
   }
 ]);
 
+const navigateToCategory = (categoryName: string) => {
+  const normalizedCategory = categoryName.trim();
+  router.push({
+    name: 'CategoryVehicles',
+    params: { categoryName: normalizedCategory }
+  });
+};
+
 </script>
 
 <template>
@@ -96,6 +104,7 @@ const allCategories = ref([
         <div 
           v-for="cat in allCategories" 
           :key="cat.name"
+          @click="navigateToCategory(cat.name)"
           class="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition duration-200 group cursor-pointer flex flex-col justify-between"
         >
           <div>
