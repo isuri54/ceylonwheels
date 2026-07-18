@@ -1,28 +1,82 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 import AppNavbar from '../../../components/AppNavbar.vue';
 import AppFooter from '../../../components/AppFooter.vue';
 
 const router = useRouter();
 
+// blueprint interface for vehicle items
+interface Vehicle {
+  id: number;
+  name: string;
+  category: string;
+  location: string;
+  rating: number;
+  reviewsCount: number;
+  price: number;
+  img: string;
+}
+
+// Interface for the backend DB category count response
+interface DbCategoryCount {
+  _id: string;
+  count: number;
+}
+
+// Reactive state to hold the real counts fetched from database
+const dbCounts = ref<DbCategoryCount[]>([]);
+
 // State management for active FAQ dropdown panels
 const openFaqIndex = ref<number | null>(0);
 
 // Horizontal scrolling vehicle classes collection matching Ceylon context
-const categories = ref([
-  { name: 'Cars', count: '14 Cars', img: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&q=80&w=400' },
-  { name: 'Premium SUVs', count: '22 Vehicles', img: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=400' },
-  { name: 'Jeeps', count: '6 Models', img: 'https://dealerinspire-image-library-prod.s3.us-east-1.amazonaws.com/images/0OsBoMCXZnHQ97dLNxiz1bXNTHbK2swADHpsAco5.jpg' },
-  { name: 'Vans', count: '11 Vans', img: 'https://www.everycar.jp/blog/wp-content/uploads/img241030_19f974.jpg' },
-  { name: 'Cabs / Pickups', count: '8 Vehicles', img: 'https://stimg.cardekho.com/images/carexteriorimages/630x420/Isuzu/S-CAB/9432/1768897007449/front-left-side-47.jpg?tr=w-360' },
+const categoriesConfig = ref([
+  { name: 'Cars', singular: 'Car', plural: 'Cars', img: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&q=80&w=400' },
+  { name: 'Premium SUVs', singular: 'Vehicle', plural: 'Vehicles', img: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=400' },
+  { name: 'Jeeps', singular: 'Model', plural: 'Models', img: 'https://dealerinspire-image-library-prod.s3.us-east-1.amazonaws.com/images/0OsBoMCXZnHQ97dLNxiz1bXNTHbK2swADHpsAco5.jpg' },
+  { name: 'Vans', singular: 'Van', plural: 'Vans', img: 'https://www.everycar.jp/blog/wp-content/uploads/img241030_19f974.jpg' },
+  { name: 'Cabs / Pickups', singular: 'Vehicle', plural: 'Vehicles', img: 'https://stimg.cardekho.com/images/carexteriorimages/630x420/Isuzu/S-CAB/9432/1768897007449/front-left-side-47.jpg?tr=w-360' },
 ]);
 
+// Fetch genuine count records from database via API when component mounts
+onMounted(async () => {
+  try {
+    const response = await fetch(`http://localhost:3000/api/v1/vehicles/counts-by-category`);
+    if (!response.ok) {
+      throw new Error(`HTTP network error status: ${response.status}`);
+    }
+    const data = await response.json();
+    dbCounts.value = data;
+  } catch (error) {
+    console.error("Failed to retrieve database vehicle counts:", error);
+  }
+});
+
+// Dynamic Computed Engine tracking database data figures strictly
+const categories = computed(() => {
+  return categoriesConfig.value.map(cat => {
+    // Looks for a case-insensitive match from the backend response array
+    const dbMatch = dbCounts.value.find(
+      dbItem => dbItem._id?.trim().toLowerCase() === cat.name.trim().toLowerCase()
+    );
+    
+    const totalCount = dbMatch ? dbMatch.count : 0;
+
+    return {
+      ...cat,
+      count: totalCount === 1 ? `1 ${cat.singular}` : `${totalCount} ${cat.plural}`
+    };
+  });
+});
+
 // Premium Curated Featured Fleet Vehicles Selection Array
-const featuredVehicles = ref([
+const featuredVehicles = ref<Vehicle[]>([
   {
     id: 1,
     name: 'Mercedes-Benz E-Class',
+    category: 'Cars',
     location: 'Colombo 07',
     rating: 4.9,
     reviewsCount: 42,
@@ -32,6 +86,7 @@ const featuredVehicles = ref([
   {
     id: 2,
     name: 'BMW X5 Premium M-Sport',
+    category: 'Premium SUVs',
     location: 'Nugegoda',
     rating: 4.8,
     reviewsCount: 29,
@@ -41,6 +96,7 @@ const featuredVehicles = ref([
   {
     id: 3,
     name: 'Audi A7 Sportback Coupe',
+    category: 'Cars',
     location: 'Battaramulla',
     rating: 5.0,
     reviewsCount: 16,
@@ -50,6 +106,7 @@ const featuredVehicles = ref([
   {
     id: 4,
     name: 'Tesla Model S Plaid',
+    category: 'Cars',
     location: 'Colombo 03',
     rating: 4.7,
     reviewsCount: 21,
