@@ -8,32 +8,36 @@ import {
   UseInterceptors, 
   UploadedFiles, 
   Body,
-  ConflictException
+  ConflictException,
+  Param
 } from '@nestjs/common';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { VehiclesService } from './vehicles.service';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { Param } from '@nestjs/common';
 
 @Controller('vehicles') // Context URL path: http://localhost:3000/vehicles
 export class VehiclesController {
   constructor(private readonly vehiclesService: VehiclesService) {}
 
   // SEARCH ROUTE BLOCK
-
   @Get('search')
   @HttpCode(HttpStatus.OK)
   async search(@Query('q') query: string) {
     return await this.vehiclesService.searchVehicles(query);
   }
 
+  // GET AGGREGATED CATEGORY COUNTS FOR DASHBOARD
+  // URL: http://localhost:3000/vehicles/counts-by-category
+  @Get('counts-by-category')
+  @HttpCode(HttpStatus.OK)
+  async getCategoryCounts() {
+    return await this.vehiclesService.getCategoryCounts();
+  }
+
   // MANAGEMENT / ONBOARDING ROUTE BLOCK
-  
   @Post()
   @UseInterceptors(
-    // Using AnyFilesInterceptor because the frontend appends explicit key slots 
-    // (e.g. image_front, image_rear, doc_cr_front) dynamically.
     AnyFilesInterceptor({
       storage: diskStorage({
         destination: './uploads/vehicles',
@@ -51,13 +55,11 @@ export class VehiclesController {
   ) {
     const parsedData = JSON.parse(dataString);
 
-    // Map file storage paths directly to their specific frontend form slots
     const vehicleImages: Record<string, string> = {};
     const documentFiles: Record<string, string> = {};
 
     if (files && files.length > 0) {
       files.forEach(file => {
-        // Force replace any Windows backslashes (\) with web standard forward slashes (/)
         const normalizedPath = file.path.replace(/\\/g, '/');
 
         if (file.fieldname.startsWith('image_')) {
