@@ -81,4 +81,22 @@ export class VehiclesService {
       throw new InternalServerErrorException('Database aggregation fault.');
     }
   }
+
+  // Get vehicle counts by category for dashboard display
+
+  async getCategoryCounts() {
+  return await this.vehicleModel.aggregate([
+    {
+      $match: {
+        approvalStatus: 'PENDING' 
+      }
+    },
+    {
+      $group: {
+        _id: '$category', 
+        count: { $sum: 1 }, // Adds 1 for every matching document found
+      },
+    },
+  ]);
+}
 }
