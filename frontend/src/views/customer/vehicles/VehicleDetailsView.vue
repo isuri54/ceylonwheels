@@ -11,6 +11,10 @@ const vehicle = ref<any>(null);
 const isLoading = ref(true);
 const activeImageTab = ref('front');
 
+// Dynamic layout reactive states for handling the saved vehicle wishlist
+const isSaved = ref(false);
+const isSaving = ref(false);
+
 // Dynamic gallery extractor matching backend record fields
 const galleryImages = computed(() => {
   if (!vehicle.value?.vehicleImages) return [];
@@ -35,8 +39,56 @@ const fetchVehicleDetails = async () => {
   }
 };
 
+// Check if current user has already pinned this listing
+const checkSavedStatus = async () => {
+  try {
+    const token = localStorage.getItem('ceylonwheels_token') || localStorage.getItem('token');
+    if (!token) return;
+
+    // FIX: Updated endpoint path
+    const response = await fetch(`http://localhost:3000/api/v1/vehicles/saved/${vehicleId}/status`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (response.ok) {
+      const data = await response.json();
+      isSaved.value = data.saved;
+    }
+  } catch (error) {
+    console.error('Error checking saved status:', error);
+  }
+};
+
+// Dispatch action to save or unsave listing
+const toggleSaveListing = async () => {
+  try {
+    const token = localStorage.getItem('ceylonwheels_token') || localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+
+    isSaving.value = true;
+    
+    // FIX: Updated endpoint path
+    const response = await fetch(`http://localhost:3000/api/v1/vehicles/saved/${vehicleId}/toggle`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      isSaved.value = data.saved;
+    }
+  } catch (error) {
+    console.error('Failed toggling listing save state:', error);
+  } finally {
+    isSaving.value = false;
+  }
+};
+
 onMounted(() => {
   fetchVehicleDetails();
+  checkSavedStatus();
 });
 </script>
 
@@ -230,6 +282,15 @@ onMounted(() => {
               class="w-full bg-[#4A0004] hover:bg-[#340003] text-white py-4 px-6 text-xs font-black uppercase tracking-widest transition duration-150 ease-in-out shadow-md hover:shadow-lg focus:outline-none"
             >
               Book This Vehicle
+            </button>
+
+            <button 
+              @click="toggleSaveListing"
+              :disabled="isSaving"
+              class="w-full border border-slate-300 hover:border-slate-800 text-slate-800 py-3.5 px-6 text-xs font-bold uppercase tracking-widest transition duration-150 ease-in-out flex items-center justify-center space-x-2 focus:outline-none disabled:opacity-60"
+            >
+              <span>{{ isSaved ? '❤️' : '🤍' }}</span>
+              <span>{{ isSaved ? 'Saved to Wishlist' : 'Save for Later' }}</span>
             </button>
           </div>
 
