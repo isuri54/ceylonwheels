@@ -9,14 +9,17 @@ import {
   UploadedFiles, 
   Body,
   ConflictException,
-  Param
+  Param,
+  UseGuards,
+  Req
 } from '@nestjs/common';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { VehiclesService } from './vehicles.service';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'; 
 
-@Controller('vehicles') // Context URL path: http://localhost:3000/vehicles
+@Controller('vehicles')
 export class VehiclesController {
   constructor(private readonly vehiclesService: VehiclesService) {}
 
@@ -28,7 +31,6 @@ export class VehiclesController {
   }
 
   // GET AGGREGATED CATEGORY COUNTS FOR DASHBOARD
-  // URL: http://localhost:3000/vehicles/counts-by-category
   @Get('counts-by-category')
   @HttpCode(HttpStatus.OK)
   async getCategoryCounts() {
@@ -89,7 +91,23 @@ export class VehiclesController {
     return await this.vehiclesService.findByCategory(categoryName);
   }
 
-  // CUSTOMER FACING: GET BY ID
+  // TOGGLE SAVE LISTING
+  @Post('saved/:vehicleId/toggle')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async toggleSave(@Param('vehicleId') vehicleId: string, @Req() req: any) {
+    return await this.vehiclesService.toggleSaveVehicle(req.user.id, vehicleId);
+  }
+
+  // CHECK WISHLIST STATUS
+  @Get('saved/:vehicleId/status')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async checkStatus(@Param('vehicleId') vehicleId: string, @Req() req: any) {
+    return await this.vehiclesService.checkSaveStatus(req.user.id, vehicleId);
+  }
+
+  // CUSTOMER FACING: GET BY ID (Kept at the bottom so it doesn't break static routes)
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async getById(@Param('id') id: string) {
