@@ -129,4 +129,25 @@ export class VehiclesService {
       throw new InternalServerErrorException('Failed to read wishlist status parameters.');
     }
   }
+
+  // get SavedVehicles By User
+
+async getSavedVehiclesByUser(customerId: string) {
+  try {
+    const savedRecords = await this.savedVehicleModel
+      .find({ customerId: new Types.ObjectId(customerId) })
+      .populate({
+        path: 'vehicleId',
+        select: '_id brand model category dailyPrice fuelType transmission pickupLocation addressCity vehicleImages'
+      })
+      .exec();
+
+    // Filter out any populated documents that might be null (e.g., if vehicle was deleted)
+    return savedRecords
+      .map(record => record.vehicleId)
+      .filter(vehicle => vehicle !== null);
+  } catch (error) {
+    throw new InternalServerErrorException('Failed to retrieve user saved vehicles.');
+  }
+}
 }
