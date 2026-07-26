@@ -107,7 +107,16 @@ export class VehiclesController {
     return await this.vehiclesService.checkSaveStatus(req.user.id, vehicleId);
   }
 
-  // CUSTOMER FACING: GET BY ID (Kept at the bottom so it doesn't break static routes)
+  // Get saved vehicles by user
+
+@Get('saved/my-list')
+@UseGuards(JwtAuthGuard)
+@HttpCode(HttpStatus.OK)
+async getMySavedVehicles(@Req() req: any) {
+  return await this.vehiclesService.getSavedVehiclesByUser(req.user.id || req.user._id);
+}
+
+  // CUSTOMER FACING: GET BY ID 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async getById(@Param('id') id: string) {
