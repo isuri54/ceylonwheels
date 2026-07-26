@@ -12,6 +12,7 @@ import MyVechicles from '../views/renter/vehicles/MyVechicles.vue';
 import AddVehicle from '../views/renter/vehicles/AddVehicle.vue';
 import CategoryVehiclesView from '../views/customer/vehicles/CategoryVehiclesView.vue';
 import VehicleDetailsView from '../views/customer/vehicles/VehicleDetailsView.vue';
+import SavedVehiclesView from '../views/customer/vehicles/SavedVehiclesView.vue';
 
 const routes = [
   {
@@ -73,6 +74,11 @@ const routes = [
     path: '/vehicles/:id',
     name: 'VehicleDetails',
     component: VehicleDetailsView
+  },
+  {
+    path: '/saved-vehicles',
+    name: 'SavedVehicles',
+    component: SavedVehiclesView
   }
 ];
 
