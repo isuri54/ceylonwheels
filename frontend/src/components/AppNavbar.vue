@@ -261,7 +261,7 @@ const selectVehicle = (vehicleId: string) => {
               <span>My Bookings</span>
             </router-link>
             
-            <router-link to="/cussaved" class="px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#4A0004] transition flex items-center space-x-2">
+            <router-link to="/saved-vehicles" class="px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#4A0004] transition flex items-center space-x-2">
               <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
               <span>Saved Vehicles</span>
             </router-link>
