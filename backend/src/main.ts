@@ -6,6 +6,7 @@ import { Connection } from 'mongoose';
 import { getConnectionToken } from '@nestjs/mongoose';
 import { NestExpressApplication } from '@nestjs/platform-express/interfaces/nest-express-application.interface';
 import { join } from 'path';
+import { json, urlencoded } from 'express';
 
 async function bootstrap() {
   // Create the NestJS application instance using the root AppModule
@@ -56,6 +57,10 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',
   });
+
+  // Increase payload limit to handle base64 images (e.g., 25MB)
+  app.use(json({ limit: '25mb' }));
+  app.use(urlencoded({ limit: '25mb', extended: true }));
 
   await app.listen(port);
   console.log(`CeylonWheels backend is running on: http://localhost:${port}/api/v1`);
