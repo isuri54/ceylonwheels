@@ -5,6 +5,7 @@ import { Connection } from 'mongoose';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { VehiclesModule } from './vehicles/vehicles.module';
+import { BookingsModule } from './bookings/bookings.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { VehiclesModule } from './vehicles/vehicles.module';
     }),
     AuthModule,
     VehiclesModule,
+    BookingsModule
   ],
   controllers: [AppController],
 })
