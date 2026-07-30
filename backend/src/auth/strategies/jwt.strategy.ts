@@ -21,16 +21,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   // Once validated, this payload is injected into NestJS's execution context as "req.user"
   async validate(payload: { sub: string; email: string; role: string }) {
-    const user = await this.userModel.findById(payload.sub).select('-password'); // Exclude password string for safety
+    const user = await this.userModel.findById(payload.sub).select('-password');
+    
     if (!user) {
       throw new UnauthorizedException('Session expired or user profile no longer exists.');
     }
     
-    // RETURN AN EXPLICIT OBJECT MAP SO CONTROLLERS GET EXACTLY WHAT THEY EXPECT
     return {
-      id: user._id.toString(), // Maps MongoDB _id safely to a clean string 'id'
+      id: user._id ? user._id.toString() : payload.sub, // Fallback to payload.sub if _id conversion acts up
       email: user.email,
-      location: user.location
+      location: user.location,
     }; 
   }
 }
