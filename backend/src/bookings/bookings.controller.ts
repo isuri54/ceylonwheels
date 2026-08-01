@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Req, UseGuards, HttpStatus, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Req, UseGuards, HttpStatus, HttpCode, UnauthorizedException } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { BookingsService } from './bookings.service';
 
@@ -16,6 +16,13 @@ export class BookingsController {
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
   async createBooking(@Req() req: any, @Body() bookingDto: any) {
-    return await this.bookingsService.createBooking(req.user.id || req.user._id, bookingDto);
+    // Safely extract the id attached by your JwtStrategy
+    const userId = req.user?.id || req.user?._id;
+
+    if (!userId) {
+      throw new UnauthorizedException('Authentication required. Missing user identity.');
+    }
+
+    return await this.bookingsService.createBooking(userId, bookingDto);
   }
 }
