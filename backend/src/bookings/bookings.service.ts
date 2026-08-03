@@ -13,6 +13,15 @@ export class BookingsService {
     @InjectModel('Vehicle') private vehicleModel: Model<VehicleDocument>,
   ) {}
 
+  // Get all bookings for a specific user
+  async getUserBookings(customerId: string): Promise<Booking[]> {
+    return await this.bookingModel
+      .find({ customerId: new Types.ObjectId(customerId) })
+      .populate('vehicleId', 'make model registrationNumber primaryImage ratePerDay')
+      .sort({ createdAt: -1 })
+      .exec();
+  }
+
   // Check user profile & returning user status
   async getUserBookingProfile(userId: string) {
     const profile = await this.userProfileModel.findOne({ userId: new Types.ObjectId(userId) }).exec();
