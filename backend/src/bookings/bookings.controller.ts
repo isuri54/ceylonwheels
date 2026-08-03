@@ -25,4 +25,15 @@ export class BookingsController {
 
     return await this.bookingsService.createBooking(userId, bookingDto);
   }
+
+  // Endpoint to retrieve all bookings for the authenticated user
+  @Get('my-bookings')
+  @HttpCode(HttpStatus.OK)
+  async getMyBookings(@Req() req: any) {
+    const userId = req.user?.id || req.user?._id;
+    if (!userId) {
+      throw new UnauthorizedException('User identity not verified.');
+    }
+    return await this.bookingsService.getUserBookings(userId);
+  }
 }
